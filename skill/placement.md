@@ -8,7 +8,7 @@ Objectif : trouver la **frontière** — la ligne entre ce que l'apprenant produ
 
 **Aucun feedback pendant les phases A à D.** Corriger en cours de route contamine les sondes suivantes — l'apprenant réutilise la forme que tu viens de lui donner. Tout le retour est donné en phase E.
 
-Budget : 30 tours, 27 typiques.
+Budget : 34 tours, 27 typiques. La sonde de production peut coûter quelques tours de plus qu'avant — c'est le prix de la re-sonde obligatoire, et il est mieux dépensé là que dans dix sessions calées au mauvais niveau.
 
 ## Sommaire
 
@@ -27,11 +27,12 @@ Budget : 30 tours, 27 typiques.
 
 > Dix minutes pour que je sache d'où partir. Il n'y a rien à réussir — si tu ne sais pas, dis-le, c'est une information utile.
 
-Pose trois questions fermées, en français, non notées :
+Pose quatre questions fermées, en français, non notées :
 
 1. As-tu déjà appris l'anglais ? *(jamais / à l'école il y a longtemps / récemment)*
 2. Peux-tu tenir une conversation simple en anglais ? *(non / avec difficulté / oui)*
 3. Écris-tu parfois en anglais ? *(jamais / parfois / souvent)*
+4. Utilises-tu l'anglais au travail, en cours, ou avec des anglophones ? *(jamais / de temps en temps / tous les jours)*
 
 L'auto-évaluation ne décide de rien — elle choisit seulement l'échelon d'attaque, ce qui économise 5 à 8 tours.
 
@@ -40,6 +41,9 @@ L'auto-évaluation ne décide de rien — elle choisit seulement l'échelon d'at
 | « jamais » / « non » | 0 |
 | profil intermédiaire | 2 |
 | « oui » / « souvent » | 4 |
+| anglais utilisé tous les jours, ou séjour/études en anglais | 6 |
+
+**L'échelon d'attaque n'est jamais un plafond.** Un point d'entrée réussi n'autorise aucune conclusion : il oblige à monter jusqu'à un échec réel. Un apprenant qui entre à 4, réussit 4, réussit 6, réussit 8 doit être sondé à 10 — c'est ainsi qu'un B2 est reconnu comme B2 au lieu d'être rangé au niveau où l'on a cessé de chercher.
 
 ---
 
@@ -81,26 +85,52 @@ Note le cran atteint dans la carte : `cran +1 atteint: 2`.
 
 ```
 échelon ← point d'entrée de la phase A
-succès_max ← aucun ;  échecs ← 0
+succès_max ← aucun ;  sondes ← 0 ;  échecs_confirmés ← 0
 
 répéter jusqu'à convergence ou 14 tours :
 
-    poser la tâche de l'échelon courant
+    poser la tâche de l'échelon courant ;  sondes ← sondes + 1
     évaluer :
       RÉUSSI  = structure visée produite correctement ≥ 2 fois, spontanément
       PARTIEL = produite une fois, ou correcte mais très hésitante
       ÉCHOUÉ  = absente, ou systématiquement fautive
 
-    RÉUSSI  → succès_max ← échelon ; échecs ← 0 ; échelon ← échelon + 2
-    PARTIEL → succès_max ← échelon ; échecs ← 0 ; échelon ← échelon + 1
-    ÉCHOUÉ  → échecs ← échecs + 1 ; échelon ← échelon − 1
+    RÉUSSI  → succès_max ← échelon ; échelon ← échelon + 2
+    PARTIEL → succès_max ← échelon ; échelon ← échelon + 1
+    ÉCHOUÉ  → RE-SONDER cet échelon avec une tâche différente,
+              sur un autre thème (obligatoire, une seule fois par échelon) :
+                 la re-sonde réussit  → traiter comme RÉUSSI / PARTIEL
+                 la re-sonde échoue   → échecs_confirmés ← échecs_confirmés + 1
+                                        échelon ← échelon − 1
 
-    convergence si échecs = 2, ou échelon ≤ succès_max, ou échelon > 8
+    convergence si  échecs_confirmés = 2
+                 OU échelon ≤ succès_max
+                 OU échelon > 10
+
+    JAMAIS de convergence si le dernier échelon posé a été RÉUSSI :
+       un succès oblige toujours à sonder plus haut.
+    JAMAIS de convergence tant que sondes < 5.
+    JAMAIS de convergence tant qu'aucun échelon n'a été RÉUSSI,
+       sauf si l'échelon 0 lui-même a échoué deux fois.
+
+    Les deux planchers ci-dessus sautent quand l'échelle est épuisée :
+       l'échelon 10 RÉUSSI met fin au placement immédiatement,
+       quel que soit le nombre de sondes. Il n'y a rien au-dessus.
 
 frontière ← succès_max
 ```
 
 Le pas de +2 après un succès net fait tenir la sonde en 8 à 12 tours au lieu de 20.
+
+### Les trois garde-fous, et pourquoi ils existent
+
+**La re-sonde obligatoire.** Un échec unique ne prouve rien : la consigne a pu être mal comprise, le thème peut ne rien évoquer à l'apprenant, la réponse peut être bâclée. Sans re-sonde, deux réponses malheureuses suffisaient à faire descendre un apprenant solide de deux échelons et à figer sa frontière. **Un échec ne compte que confirmé sur une seconde tâche, différente.**
+
+**Le plancher de 5 sondes.** Une frontière posée sur 3 réponses n'est pas une mesure. Cinq sondes de production au minimum, quel que soit le point d'entrée.
+
+**L'obligation de monter après un succès.** C'est le garde-fou qui manquait. Tant que l'apprenant réussit, on continue à monter — jusqu'à l'échelon 10 s'il le faut. Un placement ne s'arrête jamais sur un succès : il s'arrête sur un échec confirmé, ou en haut de l'échelle.
+
+Ensemble, ces trois règles rendent impossible le défaut principal du placement : **ranger en A1 quelqu'un qui produit du B2.**
 
 ### Contrôle de cohérence
 
@@ -141,6 +171,28 @@ Ni note, ni placement — tu mesures l'écart.
 ## Phase E — Restitution et carte · 3 tours
 
 En français. **En preuves observées, jamais en pourcentages.**
+
+### Annonce le niveau — toujours, explicitement
+
+L'apprenant a le droit de savoir où il est situé. Dis-le en clair, en un tour, **avant** les détails :
+
+> Ton niveau de départ est **A1** — le niveau d'entrée du cadre européen. Concrètement : tu parles de toi et de ton quotidien, et on va construire à partir de là.
+
+Trois règles pour cette annonce :
+
+- **Elle vient du placement, pas de la politesse.** N'annonce jamais A1 par défaut, ni pour rassurer, ni faute d'avoir sondé assez haut. Si la sonde s'est arrêtée avant un échec confirmé, la sonde n'est pas finie.
+- **Elle nomme le niveau de production**, et tu le dis : *« c'est ton niveau à l'oral et à l'écrit quand tu produis — tu comprends nettement plus haut, c'est normal. »* Sans cette phrase, un apprenant qui lit couramment vit son A1 comme une erreur.
+- **Aucun score, aucun pourcentage, aucune note.** Le niveau est une étiquette de parcours, pas un résultat d'examen.
+
+| Frontière atteinte | Ce que tu annonces |
+|---|---|
+| 0–2 | A1 — début de parcours |
+| 3–5 | A1 — fin de A1, l'essentiel est en place |
+| 6–7 | A2 |
+| 8–9 | A2 confirmé |
+| 10 | au-delà de ce que Lingo enseigne — dis-le franchement |
+
+### Puis les preuves
 
 > Voilà où tu en es. Tu parles de toi sans difficulté — nom, origine, famille, ta journée. Tu bloques dès qu'il s'agit de quelqu'un d'autre : tu as dit *he work*, *my brother get up*, cinq fois sur six occasions. C'est le point de départ.
 >
@@ -189,10 +241,14 @@ NOTES    placement 2026-08-21 | frontiere: echelon 2 | ecart reception +2
 
 | Frontière | `level` | `NEXT` |
 |---|---|---|
-| échelon 0–2 | `A1` | première compétence non acquise à la frontière |
-| échelon 3–5 | `A1` | la fin de A1, souvent `A1.U06.C03` ou `A1.U12.*` |
-| échelon 6–9 | `A2` | **`A2.U00.C01` d'abord**, puis la frontière |
+| échelon 0–2 | `A1` | par l'ordre du curriculum |
+| échelon 3–5 | `A1` | par l'ordre du curriculum |
+| échelon 6–9 | `A2` | **`A2.U00.C01` d'abord**, puis l'ordre du curriculum |
 | échelon 10 | — | *« Ton niveau dépasse ce que Lingo sait enseigner aujourd'hui. »* |
+
+**`NEXT` n'est jamais la compétence qui vient d'échouer au placement.** C'est la première compétence du curriculum, dans l'ordre `U00`→`U12` puis `C01`→`Cnn`, dont le statut est absent et dont tous les prereqs sont au moins `DEVELOPING` — les compétences `~` comptant comme `DEVELOPING`. Un apprenant qui bute sur le passé simple ne part pas sur `A1.U12` : il part là où le parcours s'arrête, et le passé arrivera à son tour.
+
+C'est le rôle exact du suffixe `~` : il fait sauter d'un coup tout ce qui est sous la frontière, sans jamais trouer le parcours.
 
 **Un apprenant placé en A2 commence toujours par `A2.U00`**, l'unité des stratégies de discours, même si sa frontière est plus haute. C'est elle qui installe l'exigence d'élaboration, et sans elle il traversera A2 en produisant des phrases A1 justes. Deux ou trois sessions suffisent, et elles changent tout le reste du niveau.
 
@@ -214,7 +270,8 @@ La dernière issue n'est pas un échec du produit : c'est la seule réponse honn
 
 ## Ce que le placement ne fait pas
 
-- **Il ne note pas.** Aucun pourcentage, aucune étiquette affichée comme un résultat.
+- **Il ne note pas.** Aucun pourcentage, aucun score, aucune note. Le niveau CECR, lui, **est annoncé** — c'est un point de départ, pas un résultat d'examen.
+- **Il ne s'arrête pas sur un succès.** Tant que l'apprenant réussit, on monte. La sonde se termine sur un échec confirmé ou en haut de l'échelle, jamais parce qu'on a assez d'informations pour A1.
 - **Il n'enseigne pas.** Aucun feedback avant la phase E, malgré la tentation de corriger *he work* au moment où tu l'entends.
 - **Il ne dépasse pas 30 tours.** Au-delà, l'apprenant a l'impression de passer un examen avant d'avoir rien appris.
 - **Il ne mesure pas la prononciation.**
