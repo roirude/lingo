@@ -57,11 +57,25 @@ Tâches de **production ouverte** uniquement. Jamais de QCM : un QCM mesure la r
 | 3 | *Now tell me about your brother's day — or a friend's.* | `A1.U06.C03` | **le -s de la 3ᵉ personne** |
 | 4 | *What did you do last weekend?* | `A1.U12.C02` `A1.U12.C07` | past simple |
 | 5 | *What are you going to do next month?* | `A1.U12.C05` | going to |
-| 6 | *Compare life in the city and life in the village.* | au-delà de A1 | comparatifs |
-| 7 | *What would you do if you had more free time?* | au-delà de A1 | conditionnel |
-| 8 | *Is social media good or bad for young people? Argue.* | au-delà de A1 | argumentation |
+| 6 | *Compare life in the city and life in the village.* | `A2.U03.C04` | comparatifs + justification |
+| 7 | *Tell me about a time something went wrong on a trip.* | `A2.U02.C03` | récit avec arrière-plan |
+| 8 | *How long have you been doing your job? What have you achieved?* | `A2.U14.C02` | present perfect et durée |
+| 9 | *Is social media good or bad for young people? One advantage, one drawback.* | `A2.U06.C03` | argumentation structurée |
+| 10 | *If you could change one thing about your city, what would it be, and why?* | au-delà de A2 | hypothèse et nuance |
 
-**L'échelon 3 est le discriminant central pour ce public.** Beaucoup de francophones franchissent 0, 1 et 2 sans difficulté et butent net sur 3 : ils parlent d'eux-mêmes correctement et perdent la morphologie dès qu'il s'agit de quelqu'un d'autre.
+**Deux discriminants, un par niveau.**
+
+**L'échelon 3 sépare pré-A1 de A1.** Beaucoup de francophones franchissent 0, 1 et 2 sans difficulté et butent net sur 3 : ils parlent d'eux-mêmes correctement et perdent la morphologie dès qu'il s'agit de quelqu'un d'autre.
+
+**L'échelon 8 sépare A1 de A2**, et c'est le plus révélateur des deux. *I am here since two years* est la phrase qui trahit un francophone quel que soit son aisance apparente.
+
+### À partir de l'échelon 6, la justesse ne suffit plus
+
+Un échelon A2 n'est `RÉUSSI` que si la production est **correcte et développée** — au moins un fait, une raison et un exemple, soit le cran 3 de la règle du +1.
+
+Une réponse juste mais minimale — *I prefer the city because it's better* — est `PARTIEL`, pas `RÉUSSI`. Elle place l'apprenant **à** la frontière A2, pas au-dessus. C'est exactement la distinction qui manquait : un apprenant qui produit des phrases A1 justes n'est pas un apprenant A2, et le placement doit le voir.
+
+Note le cran atteint dans la carte : `cran +1 atteint: 2`.
 
 ### Règle d'escalier
 
@@ -171,13 +185,18 @@ NOTES    placement 2026-08-21 | frontiere: echelon 2 | ecart reception +2
 
 ---
 
-## Trois issues possibles
+## Quatre issues possibles
 
-1. **Pré-A1** → `NEXT = A1.U00.C01`.
-2. **A1 partiel** → `NEXT` = la première compétence non acquise à la frontière.
-3. **Au-dessus de A1** → dis-le franchement : *« Ton niveau dépasse ce que Lingo sait enseigner aujourd'hui. »*
+| Frontière | `level` | `NEXT` |
+|---|---|---|
+| échelon 0–2 | `A1` | première compétence non acquise à la frontière |
+| échelon 3–5 | `A1` | la fin de A1, souvent `A1.U06.C03` ou `A1.U12.*` |
+| échelon 6–9 | `A2` | **`A2.U00.C01` d'abord**, puis la frontière |
+| échelon 10 | — | *« Ton niveau dépasse ce que Lingo sait enseigner aujourd'hui. »* |
 
-La troisième issue n'est pas un échec du produit : c'est la seule réponse honnête tant que seul A1 existe. N'improvise pas un curriculum A2 et n'envoie pas un B1 réviser *I'm from Cameroon* — il ne reviendra pas.
+**Un apprenant placé en A2 commence toujours par `A2.U00`**, l'unité des stratégies de discours, même si sa frontière est plus haute. C'est elle qui installe l'exigence d'élaboration, et sans elle il traversera A2 en produisant des phrases A1 justes. Deux ou trois sessions suffisent, et elles changent tout le reste du niveau.
+
+La dernière issue n'est pas un échec du produit : c'est la seule réponse honnête tant que B1 n'existe pas. N'improvise pas de curriculum B1 et n'envoie pas un B2 réviser les comparatifs — il ne reviendra pas.
 
 ---
 

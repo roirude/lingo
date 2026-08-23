@@ -17,7 +17,9 @@ lingo/
 ├── skill/                    ← ce qui est chargé à l'exécution
 │   ├── SKILL.md              point d'entrée — toujours lu, sous 500 lignes
 │   ├── curriculum-a1.yaml    98 compétences, 55 points de grammaire, 55 erreurs
+│   ├── curriculum-a2.yaml    99 compétences, 58 points de grammaire, 47 erreurs
 │   ├── grammar-a1.md         14 fiches — lues une à une, à la demande
+│   ├── grammar-a2.md         12 fiches, dont A01 « la règle du +1 »
 │   └── placement.md          lu seulement au premier contact
 │
 ├── docs/                     ← conception et raisonnement — jamais chargés à l'exécution
@@ -29,7 +31,8 @@ lingo/
 │   └── 06-placement.md       escalier adaptatif, production de la carte initiale
 │
 ├── tools/
-│   ├── build_a1.py           source de vérité du curriculum → régénère le YAML + valide
+│   ├── build_a1.py           source de vérité du curriculum A1 → YAML + validation
+│   ├── build_a2.py           idem A2, prérequis vers A1 vérifiés
 │   ├── check_align.py        vérifie que le markdown et le YAML ne divergent pas
 │   ├── check_skill.py        contrôle les contraintes d'un skill Claude
 │   └── package.py            produit le ZIP installable
@@ -120,14 +123,25 @@ Ces contrôles ne sont pas décoratifs : la première passe de l'inventaire cont
 |---|---|
 | Modèle d'état et carte de progression | fait |
 | Inventaire A1 — 98 compétences | fait |
-| Fiches de grammaire — 14 points | fait |
+| Inventaire A2 — 99 compétences | fait |
+| Fiches de grammaire — 14 points A1, 12 points A2 | fait |
 | Moteur de leçon | fait |
-| Test de placement | fait |
+| Test de placement — 11 échelons, A1 et A2 | fait |
 | Assemblage du skill | fait |
-| **Test sur de vrais apprenants** | **à faire** |
+| **Test sur de vrais apprenants** | **en cours** |
 | Portage ChatGPT | à faire |
-| Niveaux A2 à C2 | à faire |
+| Niveaux B1 à C2 | à faire |
 
-Seul A1 existe. Le placement sait dire à un apprenant que son niveau dépasse ce que Lingo enseigne aujourd'hui — c'est la seule réponse honnête, et elle vaut mieux qu'un curriculum A2 improvisé.
+A1 et A2 existent. Le placement sait dire à un apprenant que son niveau dépasse ce que Lingo enseigne — c'est la seule réponse honnête, et elle vaut mieux qu'un curriculum B1 improvisé.
 
-**La prochaine étape n'est pas de la conception.** C'est de faire tourner le skill avec trois vrais apprenants francophones, et de regarder où il dérive. Le terrain produira les corrections qu'aucune conception ne peut anticiper.
+## Ce que le premier test terrain a corrigé
+
+Trois retours d'un apprenant réel, trois corrections dans le moteur :
+
+- **L'accueil demandait « envoie ta carte »** à quelqu'un qui n'avait jamais entendu ce mot. Le skill ouvre maintenant par une question simple, et le défaut sans carte est le placement — jamais A1.
+- **« Deux sessions différentes » ne voulait pas dire deux jours.** Dix sessions dans un après-midi validaient une maîtrise. La condition se compte désormais en jours civils, et un plafond limite à trois compétences nouvelles par jour.
+- **Un apprenant fort ne recevait aucun cours.** Le diagnostic réussi faisait sauter l'enseignement : plus il était bon, moins on lui apprenait. Le moteur monte maintenant d'un cran — le pourquoi de la forme, le développement, la variation, le contraste — au lieu de passer au suivant.
+
+S'y ajoute **la règle du +1**, qui traverse tout A2 : une production correcte mais minimale compte en production guidée, jamais en production libre. C'est ce qui empêche de valider un niveau en produisant des phrases justes du niveau inférieur.
+
+**La suite n'est pas de la conception.** C'est de continuer à faire tourner le skill avec de vrais apprenants francophones et de regarder où il dérive.
