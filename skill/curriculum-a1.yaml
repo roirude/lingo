@@ -1,5 +1,5 @@
 # Lingo — Inventaire des compétences A1
-# Généré par build_a1.py — ne pas éditer à la main.
+# Généré par tools/build.mjs — ne pas éditer à la main.
 # SOMMAIRE : 13 unités (U00-U12), 98 compétences,
 #            55 points de grammaire, 55 erreurs francophones indexées.
 # Sections de ce fichier : units | grammar_inventory | core_errors |

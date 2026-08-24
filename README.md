@@ -30,21 +30,33 @@ lingo/
 │   ├── 04-lesson-engine.md   algorithme de session, phases, interdits, exemple tracé
 │   └── 06-placement.md       escalier adaptatif, production de la carte initiale
 │
-├── tools/
-│   ├── build_a1.py           source de vérité du curriculum A1 → YAML + validation
-│   ├── build_a2.py           idem A2, prérequis vers A1 vérifiés
-│   ├── check_align.py        vérifie que le markdown et le YAML ne divergent pas
-│   ├── check_skill.py        contrôle les contraintes d'un skill Claude
-│   └── package.py            produit le ZIP installable
+├── bin/
+│   └── lingo.mjs             ← CLI publiée sur npm : `install`, `zip`
+│
+├── src/                      ← partagé entre la CLI publiée et l'outillage
+│   ├── skill.mjs             emplacement du skill, frontmatter, entrées d'archive
+│   └── zip.mjs               écriture et relecture d'archives ZIP, sans dépendance
+│
+├── tools/                    ← outillage du dépôt, jamais publié sur npm
+│   ├── data/a1.mjs           source de vérité du curriculum A1
+│   ├── data/a2.mjs           idem A2, prérequis vers A1 vérifiés
+│   ├── lib/curriculum.mjs    émission YAML et validation, communes aux deux niveaux
+│   ├── lib/pyrepr.mjs        règles de citation héritées du générateur d'origine
+│   ├── build.mjs             régénère un curriculum et le valide
+│   ├── check-align.mjs       vérifie que docs/ et le YAML ne divergent pas
+│   ├── check-skill.mjs       contrôle les contraintes d'un skill Claude
+│   └── package.mjs           produit le ZIP installable
+│
+├── test/                     ← node --test : identité du YAML, validations, ZIP
 │
 ├── dist/                     ← paquet installable, régénérable
 │   └── lingo-english-tutor.zip
 │
-├── INSTALL.md
+├── package.json
 └── README.md
 ```
 
-Le dossier source s'appelle `skill/` mais le skill s'appelle `lingo-english-tutor` : `package.py` fait le renommage au moment d'empaqueter. C'est voulu — garder `skill/` en local évite de confondre le dossier source avec le paquet installable.
+Le dossier source s'appelle `skill/` mais le skill s'appelle `lingo-english-tutor` : `tools/package.mjs` fait le renommage au moment d'empaqueter. C'est voulu — garder `skill/` en local évite de confondre le dossier source avec le paquet installable.
 
 ### La séparation `skill/` vs `docs/`
 
@@ -57,18 +69,39 @@ Cette séparation n'est pas cosmétique. Un fichier de conception chargé à l'e
 
 ## Installer
 
-Guide complet : **[INSTALL.md](INSTALL.md)**. L'essentiel :
+### Le plus court
 
 ```bash
-python3 tools/package.py     # produit dist/lingo-english-tutor.zip
+npx lingo-english-tutor install     # Claude Code
+npx lingo-english-tutor zip         # app Claude et Cowork : produit le ZIP à importer
 ```
 
-- **App Claude (web ou bureau)** — importer le ZIP dans **Customize → Skills**.
-- **Claude Code** — copier `skill/*` dans `~/.claude/skills/lingo-english-tutor/`.
+`install` copie le skill dans `~/.claude/skills/lingo-english-tutor/` ; `--project` l'installe dans `.claude/skills/` pour le versionner avec un dépôt, `--dir` choisit la destination, `--dry-run` montre ce qui serait écrit sans rien écrire. Un fichier déjà présent que le paquet ne fournit pas n'est jamais supprimé : il est signalé, c'est tout.
 
-Puis : « commence mon cours d'anglais ».
+Le paquet n'a aucune dépendance : `npx` ne télécharge que Lingo.
 
-> **Cowork** ne lit pas `~/.claude/skills/`. Il charge les skills activés sur le compte claude.ai — donc il faut passer par l'import du ZIP, même si le dossier est déjà sur le disque.
+### Depuis le dépôt cloné
+
+```bash
+npm install     # js-yaml, pour l'outillage seulement
+npm run zip     # produit dist/lingo-english-tutor.zip
+```
+
+- **App Claude (web ou bureau)** — importer le ZIP dans **Customize → Skills**, vérifier qu'il apparaît activé. L'exécution de code doit être activée dans les réglages : les skills en dépendent.
+- **Claude Code** — `node bin/lingo.mjs install`, ou copier `skill/*` dans `~/.claude/skills/lingo-english-tutor/` à la main. Pris en compte sans redémarrage, sauf si `~/.claude/skills/` n'existait pas au lancement de la session. Vérifier avec `/skills`.
+
+Puis : « commence mon cours d'anglais ». Sans carte de progression, Lingo lance un placement d'une quinzaine de minutes.
+
+> **Cowork** ne lit pas `~/.claude/skills/`. Il charge les skills activés sur le compte claude.ai — donc il faut passer par l'import du ZIP, même si le dossier est déjà sur le disque, et redémarrer la session pour resynchroniser.
+
+**Mettre à jour** — relancer `npx lingo-english-tutor install`, réimporter le ZIP, ou recopier les fichiers. Après toute modification du curriculum :
+
+```bash
+npm run verify     # build les deux niveaux, contrôle le skill, reconstruit le ZIP
+npm test           # verrouille l'identité du YAML avec sa source
+```
+
+**Si ça coince.** Le ZIP doit contenir `lingo-english-tutor/` à sa racine — `npm run zip` fait le renommage et le vérifie ; ne zippez pas `skill/` tel quel. L'import dans l'app plafonne la `description` à 200 caractères, celle de Lingo en fait 196 ; `npm run check` prévient avant l'import. Si Lingo ne se déclenche pas seul, appelez-le explicitement (`/lingo-english-tutor`) : c'est un problème de `description`, pas d'installation. S'il part en conversation libre ou annonce un pourcentage, c'est un bug d'interdit — signalez-le, c'est le retour terrain que le projet attend.
 
 ---
 
@@ -104,14 +137,15 @@ Le jour où un backend remplace la carte, **rien de la conception ne change** �
 
 ## Modifier le curriculum
 
-`skill/curriculum-a1.yaml` est **généré** — ne l'éditez pas à la main.
+`skill/curriculum-a1.yaml` est **généré** — ne l'éditez pas à la main. La source de vérité est `tools/data/a1.mjs`.
 
 ```bash
-python3 tools/build_a1.py     # régénère le YAML et valide la cohérence
-python3 tools/check_align.py  # vérifie l'alignement avec docs/02-competences-A1.md
+node tools/build.mjs a1     # régénère le YAML et valide la cohérence
+node tools/check-align.mjs  # vérifie l'alignement avec docs/02-competences-A1.md
+npm run build               # les deux niveaux d'un coup
 ```
 
-`build_a1.py` contrôle : unicité des identifiants, prérequis existants, aucune compétence sans grammaire ni mode, aucun point de grammaire orphelin, présence d'une compétence réceptive dans chaque unité, et surveillance de chaque erreur du noyau sur au moins deux compétences.
+La validation contrôle : unicité des identifiants, prérequis existants, aucune compétence sans grammaire ni mode, aucun point de grammaire orphelin, présence d'une compétence réceptive dans chaque unité, et surveillance de chaque erreur du noyau sur au moins deux compétences. A2 vérifie en plus que ses prérequis vers A1 existent, et que l'exigence d'élaboration est surveillée hors de l'unité qui l'enseigne.
 
 Ces contrôles ne sont pas décoratifs : la première passe de l'inventaire contenait dix incohérences réelles, dont trois unités sans compétence réceptive — ce qui rendait la condition 4 de la règle de maîtrise littéralement inatteignable dans ces unités.
 

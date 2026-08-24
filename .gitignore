@@ -1,1 +1,27 @@
+# Local tooling
 .claude
+
+# Node
+node_modules/
+npm-debug.log*
+.npm/
+
+# Packaging artifacts
+# `dist/lingo-english-tutor.zip` is committed on purpose: it lets people
+# install the skill without cloning or running anything.
+*.tgz
+/lingo-english-tutor.zip
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Test coverage and reports
+coverage/
+*.lcov
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini

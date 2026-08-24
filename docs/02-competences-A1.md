@@ -2,7 +2,7 @@
 
 **98 compétences observables · 13 unités · 55 points de grammaire · 55 erreurs francophones indexées.**
 
-*Chiffres générés et vérifiés par `build_a1.py` — identifiants uniques, prérequis résolus, aucune grammaire orpheline, réception présente dans chaque unité.*
+*Chiffres générés et vérifiés par `tools/build.mjs` — identifiants uniques, prérequis résolus, aucune grammaire orpheline, réception présente dans chaque unité.*
 
 ---
 
