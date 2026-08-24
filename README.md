@@ -10,6 +10,74 @@ Lingo n'est pas un partenaire de conversation en anglais. C'est un système péd
 
 ---
 
+## Installer
+
+**Vous voulez juste utiliser Lingo ?** Repérez votre outil ci-dessous.
+**Vous voulez modifier le skill ou contribuer au projet ?** Passez directement à [Pour un contributeur](#pour-un-contributeur).
+
+### Claude Code
+
+```bash
+npx lingo-english-tutor install
+```
+
+Copie le skill dans `~/.claude/skills/lingo-english-tutor/`. Vérifiez avec `/skills` qu'il apparaît. Options : `--project` (installe dans `.claude/skills/` du projet plutôt que dans votre dossier personnel), `--dir <chemin>` (destination choisie), `--dry-run` (montre ce qui serait écrit, sans rien écrire). Un fichier déjà présent que le paquet ne fournit pas n'est jamais supprimé, seulement signalé.
+
+**Si `npx` ne fonctionne pas** (pas de Node.js, réseau restreint, etc.), copiez le dossier `skill/` directement :
+
+```bash
+git clone https://github.com/roirude/lingo.git
+mkdir -p ~/.claude/skills/lingo-english-tutor
+cp lingo/skill/* ~/.claude/skills/lingo-english-tutor/
+```
+
+### App Claude (web ou bureau) et Cowork
+
+```bash
+npx lingo-english-tutor zip
+```
+
+Produit `lingo-english-tutor.zip` dans le dossier courant. Pour l'importer :
+
+1. Ouvrez **Settings** (réglages du compte, pas les réglages de la conversation).
+2. Allez dans l'onglet **Skills**.
+3. Cliquez sur **Add skill** (ou **+**, selon la version), puis **Import skill**.
+4. Sélectionnez `lingo-english-tutor.zip`.
+5. Vérifiez que Lingo apparaît **activé** dans la liste.
+
+L'exécution de code doit être activée dans les réglages : les skills en dépendent.
+
+> **Cowork** ne lit pas `~/.claude/skills/` — même si le skill est déjà installé pour Claude Code, il faut quand même passer par l'import du ZIP ci-dessus (compte claude.ai), puis redémarrer la session pour resynchroniser.
+
+### Ensuite, dans les deux cas
+
+Dites : « commence mon cours d'anglais ». Sans carte de progression, Lingo lance un placement d'une quinzaine de minutes.
+
+Le paquet `lingo-english-tutor` n'a aucune dépendance : `npx` ne télécharge rien d'autre que lui.
+
+**Mettre à jour** — relancez la même commande (`install` ou `zip`), ou réimportez le ZIP dans l'app.
+
+### Pour un contributeur
+
+Cloner le dépôt plutôt que d'utiliser `npx` :
+
+```bash
+npm install          # installe js-yaml, seule dépendance — de l'outillage, pas du skill
+npm run verify        # régénère les deux curriculums, contrôle le skill, reconstruit le ZIP
+npm test               # vérifie que le YAML commité correspond bien à sa source
+```
+
+Puis installez comme un utilisateur, mais depuis le dépôt local plutôt que depuis npm : `node bin/lingo.mjs install` (Claude Code), ou `node bin/lingo.mjs zip` (app / Cowork). Après toute modification du curriculum, relancez `npm run verify` et `npm test` avant de committer.
+
+### En cas de problème
+
+- **Le ZIP est refusé à l'import.** Il doit contenir `lingo-english-tutor/` à sa racine — c'est ce que produit `npx lingo-english-tutor zip` ou `npm run zip`. Si vous avez zippé `skill/` vous-même, c'est le nom du dossier qui coince.
+- **La `description` est refusée à l'import.** L'app plafonne à 200 caractères ; celle de Lingo en fait 196. Si vous l'avez modifiée dans `skill/SKILL.md`, `npm run check` vous préviendra avant de réempaqueter.
+- **Lingo ne se déclenche pas tout seul.** Appelez-le explicitement : `/lingo-english-tutor`. C'est un problème de `description` (Claude ne comprend pas quand le déclencher), pas un problème d'installation.
+- **Lingo part en conversation libre, ou annonce un pourcentage/une note.** C'est un bug, pas un comportement voulu — signalez-le, c'est le retour terrain que le projet attend.
+
+---
+
 ## Arborescence
 
 ```
@@ -65,43 +133,22 @@ Le dossier source s'appelle `skill/` mais le skill s'appelle `lingo-english-tuto
 
 Cette séparation n'est pas cosmétique. Un fichier de conception chargé à l'exécution dilue les instructions dans de l'argumentation, et le modèle suit moins bien. Ne déplacez rien de `docs/` vers `skill/`.
 
----
+### État
 
-## Installer
+| Pièce | État |
+|---|---|
+| Modèle d'état et carte de progression | fait |
+| Inventaire A1 — 98 compétences | fait |
+| Inventaire A2 — 99 compétences | fait |
+| Fiches de grammaire — 14 points A1, 12 points A2 | fait |
+| Moteur de leçon | fait |
+| Test de placement — 11 échelons, A1 et A2 | fait |
+| Assemblage du skill | fait |
+| **Test sur de vrais apprenants** | **en cours** |
+| Portage ChatGPT | à faire |
+| Niveaux B1 à C2 | à faire |
 
-### Le plus court
-
-```bash
-npx lingo-english-tutor install     # Claude Code
-npx lingo-english-tutor zip         # app Claude et Cowork : produit le ZIP à importer
-```
-
-`install` copie le skill dans `~/.claude/skills/lingo-english-tutor/` ; `--project` l'installe dans `.claude/skills/` pour le versionner avec un dépôt, `--dir` choisit la destination, `--dry-run` montre ce qui serait écrit sans rien écrire. Un fichier déjà présent que le paquet ne fournit pas n'est jamais supprimé : il est signalé, c'est tout.
-
-Le paquet n'a aucune dépendance : `npx` ne télécharge que Lingo.
-
-### Depuis le dépôt cloné
-
-```bash
-npm install     # js-yaml, pour l'outillage seulement
-npm run zip     # produit dist/lingo-english-tutor.zip
-```
-
-- **App Claude (web ou bureau)** — importer le ZIP dans **Customize → Skills**, vérifier qu'il apparaît activé. L'exécution de code doit être activée dans les réglages : les skills en dépendent.
-- **Claude Code** — `node bin/lingo.mjs install`, ou copier `skill/*` dans `~/.claude/skills/lingo-english-tutor/` à la main. Pris en compte sans redémarrage, sauf si `~/.claude/skills/` n'existait pas au lancement de la session. Vérifier avec `/skills`.
-
-Puis : « commence mon cours d'anglais ». Sans carte de progression, Lingo lance un placement d'une quinzaine de minutes.
-
-> **Cowork** ne lit pas `~/.claude/skills/`. Il charge les skills activés sur le compte claude.ai — donc il faut passer par l'import du ZIP, même si le dossier est déjà sur le disque, et redémarrer la session pour resynchroniser.
-
-**Mettre à jour** — relancer `npx lingo-english-tutor install`, réimporter le ZIP, ou recopier les fichiers. Après toute modification du curriculum :
-
-```bash
-npm run verify     # build les deux niveaux, contrôle le skill, reconstruit le ZIP
-npm test           # verrouille l'identité du YAML avec sa source
-```
-
-**Si ça coince.** Le ZIP doit contenir `lingo-english-tutor/` à sa racine — `npm run zip` fait le renommage et le vérifie ; ne zippez pas `skill/` tel quel. L'import dans l'app plafonne la `description` à 200 caractères, celle de Lingo en fait 196 ; `npm run check` prévient avant l'import. Si Lingo ne se déclenche pas seul, appelez-le explicitement (`/lingo-english-tutor`) : c'est un problème de `description`, pas d'installation. S'il part en conversation libre ou annonce un pourcentage, c'est un bug d'interdit — signalez-le, c'est le retour terrain que le projet attend.
+A1 et A2 existent. Le placement sait dire à un apprenant que son niveau dépasse ce que Lingo enseigne — c'est la seule réponse honnête, et elle vaut mieux qu'un curriculum B1 improvisé.
 
 ---
 
@@ -150,32 +197,3 @@ La validation contrôle : unicité des identifiants, prérequis existants, aucun
 Ces contrôles ne sont pas décoratifs : la première passe de l'inventaire contenait dix incohérences réelles, dont trois unités sans compétence réceptive — ce qui rendait la condition 4 de la règle de maîtrise littéralement inatteignable dans ces unités.
 
 ---
-
-## État
-
-| Pièce | État |
-|---|---|
-| Modèle d'état et carte de progression | fait |
-| Inventaire A1 — 98 compétences | fait |
-| Inventaire A2 — 99 compétences | fait |
-| Fiches de grammaire — 14 points A1, 12 points A2 | fait |
-| Moteur de leçon | fait |
-| Test de placement — 11 échelons, A1 et A2 | fait |
-| Assemblage du skill | fait |
-| **Test sur de vrais apprenants** | **en cours** |
-| Portage ChatGPT | à faire |
-| Niveaux B1 à C2 | à faire |
-
-A1 et A2 existent. Le placement sait dire à un apprenant que son niveau dépasse ce que Lingo enseigne — c'est la seule réponse honnête, et elle vaut mieux qu'un curriculum B1 improvisé.
-
-## Ce que le premier test terrain a corrigé
-
-Trois retours d'un apprenant réel, trois corrections dans le moteur :
-
-- **L'accueil demandait « envoie ta carte »** à quelqu'un qui n'avait jamais entendu ce mot. Le skill ouvre maintenant par une question simple, et le défaut sans carte est le placement — jamais A1.
-- **« Deux sessions différentes » ne voulait pas dire deux jours.** Dix sessions dans un après-midi validaient une maîtrise. La condition se compte désormais en jours civils, et un plafond limite à trois compétences nouvelles par jour.
-- **Un apprenant fort ne recevait aucun cours.** Le diagnostic réussi faisait sauter l'enseignement : plus il était bon, moins on lui apprenait. Le moteur monte maintenant d'un cran — le pourquoi de la forme, le développement, la variation, le contraste — au lieu de passer au suivant.
-
-S'y ajoute **la règle du +1**, qui traverse tout A2 : une production correcte mais minimale compte en production guidée, jamais en production libre. C'est ce qui empêche de valider un niveau en produisant des phrases justes du niveau inférieur.
-
-**La suite n'est pas de la conception.** C'est de continuer à faire tourner le skill avec de vrais apprenants francophones et de regarder où il dérive.
