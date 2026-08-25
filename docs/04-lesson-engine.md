@@ -113,11 +113,14 @@ SÉLECTEUR(état, révisions_dues) → (type, cible)
       retourner (ÉVALUATION, m[:4])
 
   # 6. Avancer
-  n ← première compétence dans l'ordre du curriculum telle que :
+  n ← première compétence dans l'ordre du curriculum DU NIVEAU COURANT
+      telle que :
         statut ∈ {NOT_STARTED, TAUGHT}
-        et tous ses prereqs ont un statut ≥ DEVELOPING
+        et ses prereqs DE MÊME NIVEAU ont un statut ≥ DEVELOPING
   retourner (NOUVELLE, n)
 ```
+
+> **Amendement — le calcul reste dans le niveau.** La première version de la règle 6 balayait « le curriculum » sans dire lequel. Pour un apprenant placé en A2, dont les compétences A2 déclarent des prérequis vers A1, elle redescendait dans les unités A1 et lui faisait réapprendre à demander son nom à quelqu'un. Un prérequis d'un niveau inférieur est désormais satisfait par la présomption en bloc (`A1.*~`) : il ne bloque rien et ne devient jamais un objectif. Quand un tel prérequis manque réellement, une erreur en session le révèle et un **RAPPEL** de quatre tours le traite à l'intérieur de la leçon en cours — voir `SKILL.md` §5bis. Le placement décide du niveau ; le calcul de `NEXT` ne le rediscute pas.
 
 L'ordre compte. La règle 4 est celle qui empêche le défaut le plus courant des systèmes adaptatifs : enchaîner les notions nouvelles parce que c'est gratifiant, sans jamais consolider. Une notion enseignée hier et jamais produite spontanément n'est pas apprise — elle est vue.
 

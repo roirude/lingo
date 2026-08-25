@@ -167,6 +167,26 @@ Début de session     l'apprenant la colle       Lingo reconstruit l'état
 Trois règles rendent le modèle viable, et elles sont dans `SKILL.md` :
 
 1. La carte est réémise à la fin de **chaque** session, même écourtée.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 2. Lingo ne prétend jamais se souvenir de ce qui n'y figure pas.
 3. Sans carte au démarrage, il lance un placement plutôt que de deviner.
 

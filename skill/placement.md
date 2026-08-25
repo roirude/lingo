@@ -207,12 +207,24 @@ Le placement ne peut rien marquer `MASTERED` — deux tours de sonde ne fourniss
 | Situation | Statut |
 |---|---|
 | Compétence produite correctement et spontanément pendant la sonde | `DEVELOPING`, `f 1/1` ou `2/2` amorcé, daté |
-| Compétence **sous** la frontière, non sondée, dont tous les prérequis sont démontrés | `DEVELOPING` avec suffixe `~`, aucun compteur, révision à **J+1** |
+| Compétence **sous** la frontière, non sondée | `DEVELOPING` avec suffixe `~`, aucun compteur |
 | Compétence au-dessus de la frontière | absente de la carte |
 
-Les compétences `~` entrent dans la **file de révision**, pas dans la file d'enseignement. Si la révision réussit, elles progressent. Si elle échoue, elles retombent en `TAUGHT` et sont enseignées. Le coût d'une erreur de placement est ainsi d'un item de révision, pas d'une session perdue — dans les deux sens.
+**Ce que « sous la frontière » couvre se déduit de la frontière seule** — jamais du souvenir de ce qui a été sondé, jamais d'un exemple recopié :
 
-### Exemple de carte issue d'un placement
+| Frontière | Compétences présumées |
+|---|---|
+| 0–2 | les compétences sondées avec succès, plus celles des unités déjà traversées |
+| 3–5 | toutes les unités A1 jusqu'à celle de la frontière, unité par unité : `A1.U00.*~`, `A1.U01.*~`, … |
+| **6–10** | **`A1.*~` — le niveau A1 entier, sans exception ni tri.** |
+
+**N'énumère jamais à la main ce qu'une étoile couvre.** C'est l'erreur la plus coûteuse du placement. A2 déclare 14 prérequis vers A1, dispersés de `A1.U00` à `A1.U12` ; une liste écrite au jugé en oublie la plus grande part, et chaque oubli devient un prérequis manquant qui fait reculer tout le parcours de l'apprenant. Un apprenant qui produit du A2 n'a pas à voir discuter compétence par compétence ce qu'il sait de A1 : écris `A1.*~`, une fois, et c'est juste par construction.
+
+Les compétences `~` entrent dans la **file de révision**, pas dans la file d'enseignement, et **par échantillonnage** : la ligne `DUE` en porte le compte, jamais le détail, et une session en tire deux au maximum. Si la révision réussit, elles progressent. Si elle échoue, elles retombent en `TAUGHT` et sont enseignées. Le coût d'une erreur de placement est ainsi d'un item de révision, pas d'une session perdue — dans les deux sens.
+
+### Deux exemples de carte
+
+**Frontière basse — échelon 2, niveau A1.** Les présumées s'énumèrent, parce qu'elles sont peu nombreuses et choisies :
 
 ```
 LINGO-STATE v1
@@ -235,22 +247,48 @@ NOTES    placement 2026-08-21 | frontiere: echelon 2 | ecart reception +2
          | phase C fiable (ecrit)
 ```
 
+**Frontière haute — échelon 8, niveau A2.** C'est le cas où une liste écrite à la main se trompe. Tout A1 tient sur une ligne, et `NEXT` reste dans A2 :
+
+```
+LINGO-STATE v1
+learner: Rudex | l1:fr | level:A2 | sessions:1 | last:2026-08-23 | today:0 | lang:fr
+--
+DEVELOPING
+  A2.U03.C04 f2/2 last:2026-08-23 next:2026-08-24 st:0
+  A2.U02.C03 f1/1 last:2026-08-23 next:2026-08-24 st:0
+  A2.U14.C02 f1/1 last:2026-08-23 next:2026-08-24 st:0
+  A1.*~
+TAUGHT
+REMEDIATE
+--
+ERRORS   E.FR.3SG-S 0/1 | E.FR.DO-AUX-OMIT 0/3 | E.FR.AGE-HAVE 0/1 | E.FR.BE-OMIT 0/3
+         E.FR.PP-DEPUIS 1/1
+DUE      2026-08-24 (A1.*~ 98 items presumes, 2 echantillonnes par session)
+NEXT     A2.U00.C01
+NOTES    placement 2026-08-23 | frontiere: echelon 8 | ecart reception +2
+         | A1 presume en bloc : un trou se comble par RAPPEL en cours de lecon, pas par un retour en A1
+```
+
+Une seule ligne pour tout un niveau. C'est la forme correcte, et la seule qui garantisse qu'aucun prérequis ne manque.
+
 ---
 
 ## Quatre issues possibles
 
 | Frontière | `level` | `NEXT` |
 |---|---|---|
-| échelon 0–2 | `A1` | par l'ordre du curriculum |
-| échelon 3–5 | `A1` | par l'ordre du curriculum |
-| échelon 6–9 | `A2` | **`A2.U00.C01` d'abord**, puis l'ordre du curriculum |
+| échelon 0–2 | `A1` | par l'ordre du curriculum A1 |
+| échelon 3–5 | `A1` | par l'ordre du curriculum A1 |
+| échelon 6–9 | `A2` | **`A2.U00.C01` d'abord**, puis l'ordre du curriculum **A2** — jamais A1 |
 | échelon 10 | — | *« Ton niveau dépasse ce que Lingo sait enseigner aujourd'hui. »* |
 
-**`NEXT` n'est jamais la compétence qui vient d'échouer au placement.** C'est la première compétence du curriculum, dans l'ordre `U00`→`U12` puis `C01`→`Cnn`, dont le statut est absent et dont tous les prereqs sont au moins `DEVELOPING` — les compétences `~` comptant comme `DEVELOPING`. Un apprenant qui bute sur le passé simple ne part pas sur `A1.U12` : il part là où le parcours s'arrête, et le passé arrivera à son tour.
+**`NEXT` n'est jamais la compétence qui vient d'échouer au placement**, et **jamais une compétence d'un niveau inférieur au `level` annoncé.** C'est la première compétence du curriculum **de ce niveau**, dans l'ordre `U00`→`Unn` puis `C01`→`Cnn`, dont le statut est absent et dont les prereqs **de même niveau** sont au moins `DEVELOPING`. Un prereq qui pointe vers le niveau inférieur est satisfait par la présomption en bloc : il ne bloque rien et ne devient jamais un objectif. Un apprenant qui bute sur le passé simple ne part pas sur `A1.U12` : il part là où le parcours s'arrête, et le passé arrivera à son tour.
 
 C'est le rôle exact du suffixe `~` : il fait sauter d'un coup tout ce qui est sous la frontière, sans jamais trouer le parcours.
 
-**Un apprenant placé en A2 commence toujours par `A2.U00`**, l'unité des stratégies de discours, même si sa frontière est plus haute. C'est elle qui installe l'exigence d'élaboration, et sans elle il traversera A2 en produisant des phrases A1 justes. Deux ou trois sessions suffisent, et elles changent tout le reste du niveau.
+**Un apprenant placé en A2 commence toujours par `A2.U00.C01`**, l'unité des stratégies de discours, même si sa frontière est plus haute. C'est elle qui installe l'exigence d'élaboration, et sans elle il traversera A2 en produisant des phrases A1 justes. Deux ou trois sessions suffisent, et elles changent tout le reste du niveau.
+
+**Et il ne repasse jamais par A1.** Si une lacune A1 réelle se révèle plus tard, elle apparaîtra sous forme d'erreur en pleine leçon, et se traitera par un RAPPEL de quatre tours à l'intérieur de cette leçon, avant que la leçon A2 reprenne. Renvoyer dans les unités de A1 quelqu'un qu'on vient de placer en A2 lui fait réapprendre à demander *What's your name?* et à compter jusqu'à vingt : c'est le moyen le plus sûr de le perdre, et cela rendrait le placement inutile.
 
 La dernière issue n'est pas un échec du produit : c'est la seule réponse honnête tant que B1 n'existe pas. N'improvise pas de curriculum B1 et n'envoie pas un B2 réviser les comparatifs — il ne reviendra pas.
 

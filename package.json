@@ -1,6 +1,6 @@
 {
   "name": "lingo-english-tutor",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Professeur d'anglais pour apprenants francophones, sous forme de skill Claude : lecon, pratique, preuves, revision espacee.",
   "keywords": ["claude", "claude-code", "skill", "english", "esl", "fle", "tutor", "cefr", "a1", "a2"],
   "homepage": "https://github.com/roirude/lingo#readme",

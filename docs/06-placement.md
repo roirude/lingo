@@ -184,7 +184,7 @@ Trois règles :
 | Situation | Statut attribué |
 |---|---|
 | Compétence produite correctement et spontanément pendant la sonde | `DEVELOPING`, avec `f 1/1` ou `2/2` amorcé, daté |
-| Compétence **sous** la frontière, non sondée directement, mais dont tous les prérequis ont été démontrés | `DEVELOPING` avec le drapeau `presumed`, aucun compteur, révision programmée à **J+1** |
+| Compétence **sous** la frontière, non sondée directement | `DEVELOPING` avec le drapeau `presumed`, aucun compteur, révision programmée à **J+1** |
 | Compétence au-dessus de la frontière | absente de la carte (`NOT_STARTED`) |
 
 Le drapeau `presumed` est la façon honnête de sauter du contenu sans le créditer faussement. Ces compétences n'entrent pas dans la file d'enseignement mais dans la **file de révision**, dès le lendemain. Si la révision réussit, elles progressent normalement. Si elle échoue, elles retombent en `TAUGHT` et sont enseignées. Le coût d'une erreur de placement est ainsi d'un item de révision, pas d'une session entière perdue — dans un sens comme dans l'autre.
@@ -192,6 +192,10 @@ Le drapeau `presumed` est la façon honnête de sauter du contenu sans le crédi
 > **Amendement à `lingo-01-modele-etat.md`** — ajouter au schéma de compétence le champ booléen `presumed` (défaut `false`), et à la carte compacte le suffixe `~` sur les identifiants présumés :
 > `DEVELOPING  A1.U01.C02~ A1.U03.C05~ ...`
 > Le drapeau se retire définitivement à la première preuve réelle, réussie ou non.
+>
+> **Amendement — la présomption se déduit de la frontière, pas des prérequis.** La condition d'origine (« dont tous les prérequis ont été démontrés ») était circulaire et, en pratique, impossible à appliquer de tête sur 98 compétences : elle produisait une liste courte, agglutinée autour des racines du graphe, et surtout recopiée de l'exemple ci-dessous — lequel illustre une frontière à l'échelon 2. Un apprenant placé à l'échelon 8 héritait ainsi des présumées d'un apprenant échelon 2 : 13 des 14 prérequis que A2 déclare vers A1 manquaient, et son parcours redescendait à `A1.U00`.
+>
+> La règle devient purement fonction de la frontière. Frontière 0–2 : les compétences sondées et les unités déjà traversées. Frontière 3–5 : les unités A1 jusqu'à celle de la frontière, notées `A1.U00.*~`, `A1.U01.*~`… Frontière 6–10 : **`A1.*~`**, le niveau entier, sans tri — une seule ligne de carte, juste par construction. Corollaire : les présumées entrent en révision **par échantillonnage** (deux par session au maximum, `DUE` n'en porte que le compte), sans quoi un niveau entier présumé transforme chaque session en rattrapage. `tools/check-align.mjs` vérifie que la présomption en bloc n'a pas disparu du skill.
 
 ### Exemple de carte issue d'un placement
 
