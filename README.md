@@ -1,4 +1,4 @@
-# Lingo
+# Lingo English Tutor
 
 Un professeur d'anglais pour apprenants francophones, sous forme de skill Claude.
 
